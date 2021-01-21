@@ -1,0 +1,2 @@
+pytanie? | wyjasnienie | poprawna odpowiedz | odp | odp2 | odp3 | odp4
+pyt | wyj | popr odp | odp | g | r | a
