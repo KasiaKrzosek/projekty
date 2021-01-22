@@ -1,10 +1,20 @@
+def zapis_wyniku(data, SciezkaPliku, pkt, max, poprawne_odp):
+    SciezkaZapisu = "Wyniki.txt"
+    print('zapisano wynik:', data + " | " + SciezkaPliku + " | " + str(pkt) + " | " + str(max) + " | " + poprawne_odp)
+    zapis = (data + " | " + SciezkaPliku + " | " + str(pkt) + \
+             " | " + str(max) + " | " +  poprawne_odp )
+    zapis = zapis + ("\n")
+    
+    with open(SciezkaZapisu, "a", encoding="utf-8") as Z: 
+        Z.write(zapis)
+
 def zadawanie_pytan():
     import random
     import time
     import math
    
     global SciezkaPliku
-    SciezkaPliku = input("Prosze podaj nazwe pliku (musi byc w tym samym folderze co ten plik,\n\
+    SciezkaPliku = input("\nProsze podaj nazwe pliku (musi byc w tym samym folderze co ten plik,\n\
 w formacie '.txt' - innych formatow nie przyjmuje), przykład: 'Pytania' ")
     SciezkaPliku = SciezkaPliku + '.txt'
     print('otwierasz plik o nazwie:', SciezkaPliku)
@@ -89,7 +99,9 @@ w formacie '.txt' - innych formatow nie przyjmuje), przykład: 'Pytania' ")
         odpowiedz = input("Podaj odpowiedz: ")
         odpowiedzi.append(odpowiedz)
         licznik += 1
-        
+
+    global punkty
+    global znane_odpowiedzi    
     licz = 0
     punkty = 0
     znane_odpowiedzi = []
@@ -103,7 +115,7 @@ w formacie '.txt' - innych formatow nie przyjmuje), przykład: 'Pytania' ")
         if odpowiedz in zbior_pytan[licz]["mozliwe"]\
         and zbior_pytan[licz]["mozliwe"][odpowiedz] == zbior_pytan[licz]["poprawna"]:                
             punkty +=1
-            znane_odpowiedzi.append(odpowiedz)
+            znane_odpowiedzi.append(zbior_pytan[licz]["poprawna"])
             znane_pytania.append(zbior_pytan[licz][licz + 1])
             
         else:
@@ -113,9 +125,11 @@ w formacie '.txt' - innych formatow nie przyjmuje), przykład: 'Pytania' ")
             wyjasnienia_nieznanych.append(zbior_pytan[licz]["wyjasnienie"])
                     
         licz += 1
-                      
-    print('\nliczba punktow:', punkty, "na", len(odpowiedzi))
-    print("to jest %.1f procent " %(punkty/len(odpowiedzi)*100))       
+        
+    global max
+    max = len(odpowiedzi)                  
+    print('\nliczba punktow:', punkty, "na", max)
+    print("to jest %.1f procent " %(punkty/max*100))       
     print('\npytania i odpowiedzi dla poprawnie udzielonych odopwiedzi:')
     licznik = 0   
     
@@ -136,7 +150,10 @@ w formacie '.txt' - innych formatow nie przyjmuje), przykład: 'Pytania' ")
     for odpowiedz in nieznane_pytania: 
         print(nieznane_pytania[licznik], ",", nieznane_poprawne_odpowiedzi[licznik], ",", wyjasnienia_nieznanych[licznik])
         licznik +=1
-    
+
+    global time_string
+    named_tuple = time.localtime() # get struct_time
+    time_string = time.strftime("%Y/%m/%d | %H:%M", named_tuple)
     KoniecCzasu = time.time() - PoczatekCzasu
     KoniecCzasu = int(KoniecCzasu)
     print('\nzajelo Ci to %.2f minut(y)' %(KoniecCzasu/60))
@@ -147,7 +164,8 @@ while anserw == 'tak':
     zadawanie_pytan()
     anserw = input("wpisz 'tak' by powtorzyc: ")
     anserw.lower()
-    print(anserw)    
+    znane_odpowiedzi = str(znane_odpowiedzi)
+    zapis_wyniku(time_string, SciezkaPliku, punkty, max, znane_odpowiedzi)    
 else:
     print('to czesc, dziena za dzis')
     

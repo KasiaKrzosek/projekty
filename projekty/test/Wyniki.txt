@@ -1,0 +1,1 @@
+data | godzina | SciezkaPliku.txt | pkt | max | poprawne_odp
